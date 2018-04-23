@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-04-2018 a las 22:36:39
+-- Tiempo de generación: 23-04-2018 a las 20:00:25
 -- Versión del servidor: 10.1.28-MariaDB
 -- Versión de PHP: 7.1.10
 
@@ -21,6 +21,47 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `cinetec`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertActor` (IN `pName` VARCHAR(100))  NO SQL
+    COMMENT 'Procedimiento que inserta en la tabla Actor'
+BEGIN
+INSERT INTO actor(actor.idActor, actor.name)
+VALUES (NULL, pName);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAdministrator` (IN `pNickname` VARCHAR(100), IN `pPassword` VARCHAR(100), IN `pMail` VARCHAR(100), IN `pName` VARCHAR(100))  NO SQL
+    COMMENT 'Procedimiento que inserta en la tabla administrador'
+BEGIN 
+INSERT INTO administrator(administrator.idAdministrator, administrator.password, administrator.nickname, administrator.name, administrator.mail)
+VALUES(NULL, pPassword, pNickname, pName, pMail);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertKeyword` (IN `pName` VARCHAR(100))  NO SQL
+    COMMENT 'Procedimiento que inserta en la tabla Keyword'
+BEGIN
+INSERT INTO keyword(keyword.idKeyword, keyword.name)
+VALUES(NULL, pName);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMovie` (IN `pGender` VARCHAR(100), IN `pDirector` VARCHAR(100), IN `pName` VARCHAR(100), IN `pReleaseYear` INT, IN `pAdministrator` VARCHAR(100))  NO SQL
+    COMMENT 'Procedimiento que inserta en la tabla Movie'
+BEGIN
+INSERT INTO Movie(movie.idMovie, movie.gender, movie.director, movie.calification, movie.name, movie.image, movie.year)
+VALUES(NULL, pGender, pDirector, 0, pName, NULL, pReleaseYear);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUser` (IN `pNickname` VARCHAR(100), IN `pPassword` VARCHAR(100), IN `pMail` VARCHAR(100), IN `pName` VARCHAR(100))  NO SQL
+    COMMENT 'Procedimiento que inserta en la tabla usuario'
+BEGIN 
+INSERT INTO user(user.idUser, user.avaliability, user.nickname, user.name, user.password, user.mail)
+VALUES(NULL, TRUE, pNickname, pName, pPassword, pMail);
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -47,6 +88,13 @@ CREATE TABLE `administrator` (
   `mail` varchar(100) NOT NULL COMMENT 'Correo del usuario'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla Administrator';
 
+--
+-- Volcado de datos para la tabla `administrator`
+--
+
+INSERT INTO `administrator` (`idAdministrator`, `password`, `nickname`, `name`, `mail`) VALUES
+(1, '145236', 'Osquitar', 'Oscar', 'oscar@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -57,6 +105,13 @@ CREATE TABLE `keyword` (
   `idKeyword` int(11) NOT NULL COMMENT 'Llave primaria de la tabla keyword',
   `name` varchar(100) NOT NULL COMMENT 'Nombre del keyword'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `keyword`
+--
+
+INSERT INTO `keyword` (`idKeyword`, `name`) VALUES
+(1, 'Miedo');
 
 -- --------------------------------------------------------
 
@@ -73,6 +128,13 @@ CREATE TABLE `movie` (
   `image` varchar(100) DEFAULT NULL COMMENT 'Imagen de la película',
   `year` int(11) NOT NULL COMMENT 'Año de la película'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla Movie';
+
+--
+-- Volcado de datos para la tabla `movie`
+--
+
+INSERT INTO `movie` (`idMovie`, `gender`, `director`, `calification`, `name`, `image`, `year`) VALUES
+(1, 'Novela', 'Juan Pancho Gomez', 0, 'La búsqueda de Nemo', NULL, 2014);
 
 -- --------------------------------------------------------
 
@@ -118,7 +180,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`idUser`, `avaliability`, `nickname`, `name`, `password`, `mail`) VALUES
-(1, 0, 'dnnxl', 'Daniel', '123456', 'dnnxl15@gmail.com');
+(1, 1, 'dnnxl', 'Daniel', '123456', 'dnnxl15@gmail.com'),
+(2, 1, 'dnnis', 'Dennis', '789654', 'denn@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -229,19 +292,19 @@ ALTER TABLE `actor`
 -- AUTO_INCREMENT de la tabla `administrator`
 --
 ALTER TABLE `administrator`
-  MODIFY `idAdministrator` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Administrator';
+  MODIFY `idAdministrator` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Administrator', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `keyword`
 --
 ALTER TABLE `keyword`
-  MODIFY `idKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla keyword';
+  MODIFY `idKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla keyword', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `movie`
 --
 ALTER TABLE `movie`
-  MODIFY `idMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Movie';
+  MODIFY `idMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Movie', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `moviehasactor`
@@ -259,7 +322,7 @@ ALTER TABLE `moviehaskeyword`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usercommentmovie`
