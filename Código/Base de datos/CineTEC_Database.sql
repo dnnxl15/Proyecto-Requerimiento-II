@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-04-2018 a las 20:00:25
+-- Tiempo de generación: 25-04-2018 a las 01:19:35
 -- Versión del servidor: 10.1.28-MariaDB
 -- Versión de PHP: 7.1.10
 
@@ -26,11 +26,61 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertActor` (IN `pName` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `blockUser` (IN `pUsername` VARCHAR(100))  NO SQL
+    COMMENT 'Procedure that block user'
+BEGIN
+UPDATE user
+SET user.avaliability = false
+WHERE user.nickname = pUsername;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getActorById` (IN `pIdMovie` INT(11))  NO SQL
+    COMMENT 'Procedure that get all the Actor by Id Movie'
+BEGIN
+SELECT actor.idActor AS IdActor, actor.name AS Name
+FROM actor
+INNER JOIN moviehaskeyword ON moviehasactor.idMovie = pIdMovie;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMovie` ()  NO SQL
+    COMMENT 'Procedure that returns all the movies'
+BEGIN 
+SELECT movie.idMovie AS IdMovie, movie.gender AS Gender, movie.director AS Director, movie.calification AS Calification, movie.name AS Name, movie.image AS Image, movie.year AS Year
+FROM movie;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUser` ()  NO SQL
+    COMMENT 'Procedure that get all the users '
+BEGIN
+SELECT user.idUser, user.avaliability, user.nickname, user.name, user.password, user.mail
+FROM user;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteMovieByUser` (IN `pUsernme` VARCHAR(100))  NO SQL
+    COMMENT 'Procedure that get all the favorites movies by username'
+BEGIN
+SELECT movie.idMovie, movie.gender, movie.director, movie.calification, movie.name, movie.image, movie.year
+FROM movie
+INNER JOIN usermarkmovie ON usermarkmovie.idMovie = movie.idMovie INNER JOIN user ON getIdUser(pUsernme) = usermarkmovie.idUser;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getKeywordById` (IN `pIdMovie` INT(11))  NO SQL
+    COMMENT 'Procedure that get all the keywords by id movie'
+BEGIN
+SELECT keyword.idKeyword, keyword.name
+FROM keyword
+INNER JOIN moviehaskeyword ON moviehaskeyword.idMovie = pIdMovie;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertActor` (IN `pName` VARCHAR(100), IN `pMovie` VARCHAR(100))  NO SQL
     COMMENT 'Procedimiento que inserta en la tabla Actor'
 BEGIN
 INSERT INTO actor(actor.idActor, actor.name)
 VALUES (NULL, pName);
+
+INSERT INTO moviehasactor(moviehasactor.idMovieActor, moviehasactor.idMovie, moviehasactor.idActor)
+VALUES(NULL, getIdMovie(pMovie), getIdActor(pName));
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAdministrator` (IN `pNickname` VARCHAR(100), IN `pPassword` VARCHAR(100), IN `pMail` VARCHAR(100), IN `pName` VARCHAR(100))  NO SQL
@@ -40,11 +90,28 @@ INSERT INTO administrator(administrator.idAdministrator, administrator.password,
 VALUES(NULL, pPassword, pNickname, pName, pMail);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertKeyword` (IN `pName` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertComment` (IN `pUsername` VARCHAR(100), IN `pMovie` VARCHAR(100), IN `pComment` TEXT)  NO SQL
+    COMMENT 'Procedure that insert a comment in the table userCommentMovie.'
+BEGIN
+INSERT INTO usercommentmovie(usercommentmovie.idComment, usercommentmovie.dateComment, usercommentmovie.Comment, usercommentmovie.idUser, usercommentmovie.idMovie)
+VALUES (NULL, NULL, pComment, getIdUser(pUsername), getIdMovie(pMovie));
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFavoriteMovie` (IN `pUsername` VARCHAR(100), IN `pMovie` VARCHAR(100), IN `pFavorite` BOOLEAN)  NO SQL
+    COMMENT 'Procedure that insert the favorite movie by the user'
+BEGIN
+INSERT INTO usermarkmovie(usermarkmovie.idMark, usermarkmovie.favorite, usermarkmovie.idUser, usermarkmovie.idMovie)
+VALUES (NULL, pFavorite, getIdUser(pUsername), getIdMovie(pMovie));
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertKeyword` (IN `pName` VARCHAR(100), IN `pMovie` VARCHAR(100))  NO SQL
     COMMENT 'Procedimiento que inserta en la tabla Keyword'
 BEGIN
 INSERT INTO keyword(keyword.idKeyword, keyword.name)
 VALUES(NULL, pName);
+
+INSERT INTO moviehaskeyword(moviehaskeyword.idMovieKeyword, moviehaskeyword.idMovie, moviehaskeyword.idKeyword)
+VALUES(NULL, getIdMovie(pMovie), getIdKeyword(pName));
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMovie` (IN `pGender` VARCHAR(100), IN `pDirector` VARCHAR(100), IN `pName` VARCHAR(100), IN `pReleaseYear` INT, IN `pAdministrator` VARCHAR(100))  NO SQL
@@ -52,6 +119,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMovie` (IN `pGender` VARCHAR(
 BEGIN
 INSERT INTO Movie(movie.idMovie, movie.gender, movie.director, movie.calification, movie.name, movie.image, movie.year)
 VALUES(NULL, pGender, pDirector, 0, pName, NULL, pReleaseYear);
+
+INSERT INTO administratorregistermovie(administratorregistermovie.idRegisterMovie, administratorregistermovie.idAdministrator, administratorregistermovie.idMovie)
+VALUES(NULL, getIdAdministrator(pAdministrator), getIdMovie(pName));
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRate` (IN `pUsername` VARCHAR(100), IN `pMovie` VARCHAR(100), IN `pCalification` FLOAT)  NO SQL
+    COMMENT 'Procedure that insert into table userRateMovie'
+BEGIN
+INSERT INTO userratemovie(userratemovie.idRate, userratemovie.pCalification, userratemovie.idUser, userratemovie.idMovie)
+VALUES(NULL, pCalification, getIdUser(pUsername), getIdMovie(pMovie));
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUser` (IN `pNickname` VARCHAR(100), IN `pPassword` VARCHAR(100), IN `pMail` VARCHAR(100), IN `pName` VARCHAR(100))  NO SQL
@@ -59,6 +136,102 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUser` (IN `pNickname` VARCHAR
 BEGIN 
 INSERT INTO user(user.idUser, user.avaliability, user.nickname, user.name, user.password, user.mail)
 VALUES(NULL, TRUE, pNickname, pName, pPassword, pMail);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `unblockUser` (IN `pUsername` VARCHAR(100))  NO SQL
+    COMMENT 'Procedure that unblock an user'
+BEGIN
+UPDATE user
+SET user.avaliability = true
+WHERE user.nickname = pUsername;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `unmarkFavoriteMovie` (IN `pMovie` VARCHAR(100), IN `pUsername` VARCHAR(100))  NO SQL
+    COMMENT 'Procedure that unmark a favorite movie'
+BEGIN
+DELETE FROM usermarkmovie 
+WHERE usermarkmovie.idUser = getIdUser(pUsername) AND usermarkmovie.idMovie = getIdMovie(pMovie);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMovie` ()  NO SQL
+    SQL SECURITY INVOKER
+    COMMENT 'Procedure that update the movie'
+BEGIN
+UPDATE movie
+SET movie.gender = pGender, movie.director = pDirector, movie.year = pYear, movie.name = pNewName
+WHERE movie.name = pOldName;
+END$$
+
+--
+-- Funciones
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `existAdministrator` (`pUsername` VARCHAR(100), `pPassword` VARCHAR(100)) RETURNS TINYINT(1) NO SQL
+    COMMENT 'Function that returns a boolean if the user administrator exists'
+BEGIN
+	DECLARE vExistsUser BOOLEAN DEFAULT false;
+    DECLARE vUserId INT DEFAULT 0;
+  	SELECT administrator.idAdministrator INTO vUserId FROM administrator
+    WHERE administrator.nickname = pUsername AND administrator.password = pPassword;
+    IF(vUserId = 0) THEN
+    	SET vExistsUser := false;
+    ELSE
+    	SET vExistsUser := true;
+    END IF;
+    RETURN vExistsUser;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `existsUser` (`pUsername` VARCHAR(100), `pPassword` VARCHAR(100)) RETURNS TINYINT(1) NO SQL
+BEGIN
+	DECLARE vExistsUser BOOLEAN DEFAULT false;
+    DECLARE vUserId INT DEFAULT 0;
+  	SELECT user.idUser INTO vUserId FROM user
+    WHERE user.nickname = pUsername AND user.password = pPassword;
+    IF(vUserId = 0) THEN
+    	SET vExistsUser := false;
+    ELSE
+    	SET vExistsUser := true;
+    END IF;
+    RETURN vExistsUser;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getIdActor` (`pName` VARCHAR(100)) RETURNS INT(11) NO SQL
+    COMMENT 'The function return the id of the actor and receive the name.'
+BEGIN
+	DECLARE vActorId INT(11) DEFAULT 0;
+  	SELECT actor.idActor INTO vActorId FROM actor WHERE actor.name = pName;
+  	RETURN vActorId;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getIdAdministrator` (`pUsername` VARCHAR(100)) RETURNS INT(11) NO SQL
+    COMMENT 'The function returns the id of the administrator, by username.'
+BEGIN
+	DECLARE vUserId INT(11) DEFAULT 0;
+  	SELECT administrator.idAdministrator INTO vUserId FROM user WHERE administrator.nickname = pUsername;
+  	RETURN vUserId;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getIdKeyword` (`pName` VARCHAR(100)) RETURNS INT(11) NO SQL
+    COMMENT 'The function return the id of the keyword and receive the name.'
+BEGIN
+	DECLARE vKeywordId INT(11) DEFAULT 0;
+  	SELECT keyword.idKeyword INTO vKeywordId FROM keyword WHERE keyword.name = pName;
+  	RETURN vKeywordId;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getIdMovie` (`pMovieName` VARCHAR(100)) RETURNS INT(11) NO SQL
+    COMMENT 'Function that get the movie id by the name.'
+BEGIN
+	DECLARE vMovieId INT(11) DEFAULT 0;
+  	SELECT movie.idMovie INTO vMovieId FROM movie WHERE movie.name = pMovieName;
+  	RETURN vMovieId;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getIdUser` (`pUsername` VARCHAR(100)) RETURNS INT(11) NO SQL
+    COMMENT 'Función que retorna el id del usuario por nombre de usuario'
+BEGIN
+	DECLARE vUserId INT(11) DEFAULT 0;
+  	SELECT user.idUser INTO vUserId FROM user WHERE user.nickname = pUsername;
+  	RETURN vUserId;
 END$$
 
 DELIMITER ;
@@ -73,6 +246,14 @@ CREATE TABLE `actor` (
   `idActor` int(11) NOT NULL COMMENT 'Llave primaria de la tabla Actor',
   `name` varchar(100) NOT NULL COMMENT 'Nombre del actor'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla Actor';
+
+--
+-- Volcado de datos para la tabla `actor`
+--
+
+INSERT INTO `actor` (`idActor`, `name`) VALUES
+(3, 'Juan Oscar'),
+(4, 'Pablo García');
 
 -- --------------------------------------------------------
 
@@ -94,6 +275,18 @@ CREATE TABLE `administrator` (
 
 INSERT INTO `administrator` (`idAdministrator`, `password`, `nickname`, `name`, `mail`) VALUES
 (1, '145236', 'Osquitar', 'Oscar', 'oscar@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `administratorregistermovie`
+--
+
+CREATE TABLE `administratorregistermovie` (
+  `idRegisterMovie` int(11) NOT NULL COMMENT 'Primary key in the table',
+  `idAdministrator` int(11) NOT NULL COMMENT 'Llave foránea de administrator',
+  `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de movie'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla Administrador registra película';
 
 -- --------------------------------------------------------
 
@@ -147,6 +340,14 @@ CREATE TABLE `moviehasactor` (
   `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de película',
   `idActor` int(11) NOT NULL COMMENT 'Llave foránea de Actor'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `moviehasactor`
+--
+
+INSERT INTO `moviehasactor` (`idMovieActor`, `idMovie`, `idActor`) VALUES
+(2, 1, 3),
+(3, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -205,11 +406,23 @@ CREATE TABLE `usercommentmovie` (
 
 CREATE TABLE `usermarkmovie` (
   `idMark` int(11) NOT NULL COMMENT 'Llave primaria de la tabla UserMarkMovie',
-  `calification` float NOT NULL COMMENT 'Calificación de la película de cada usuario',
   `favorite` tinyint(1) NOT NULL COMMENT 'Película marcada como favorito de cada usuario',
   `idUser` int(11) NOT NULL COMMENT 'Llave foránea de usuario',
   `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de película'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla UserMarkMovie';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `userratemovie`
+--
+
+CREATE TABLE `userratemovie` (
+  `idRate` int(11) NOT NULL COMMENT 'Llave primaria de userRateMovie',
+  `pCalification` float NOT NULL COMMENT 'Puntuación de la película',
+  `idUser` int(11) NOT NULL COMMENT 'Llave foránea de user',
+  `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de Movie'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Índices para tablas volcadas
@@ -226,6 +439,12 @@ ALTER TABLE `actor`
 --
 ALTER TABLE `administrator`
   ADD PRIMARY KEY (`idAdministrator`);
+
+--
+-- Indices de la tabla `administratorregistermovie`
+--
+ALTER TABLE `administratorregistermovie`
+  ADD PRIMARY KEY (`idRegisterMovie`);
 
 --
 -- Indices de la tabla `keyword`
@@ -260,7 +479,8 @@ ALTER TABLE `moviehaskeyword`
 -- Indices de la tabla `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`idUser`);
+  ADD PRIMARY KEY (`idUser`),
+  ADD UNIQUE KEY `nickname` (`nickname`);
 
 --
 -- Indices de la tabla `usercommentmovie`
@@ -279,6 +499,14 @@ ALTER TABLE `usermarkmovie`
   ADD KEY `idUser` (`idUser`);
 
 --
+-- Indices de la tabla `userratemovie`
+--
+ALTER TABLE `userratemovie`
+  ADD PRIMARY KEY (`idRate`),
+  ADD KEY `idUser` (`idUser`),
+  ADD KEY `idMovie` (`idMovie`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -286,13 +514,19 @@ ALTER TABLE `usermarkmovie`
 -- AUTO_INCREMENT de la tabla `actor`
 --
 ALTER TABLE `actor`
-  MODIFY `idActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Actor';
+  MODIFY `idActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Actor', AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `administrator`
 --
 ALTER TABLE `administrator`
   MODIFY `idAdministrator` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Administrator', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `administratorregistermovie`
+--
+ALTER TABLE `administratorregistermovie`
+  MODIFY `idRegisterMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key in the table';
 
 --
 -- AUTO_INCREMENT de la tabla `keyword`
@@ -310,7 +544,7 @@ ALTER TABLE `movie`
 -- AUTO_INCREMENT de la tabla `moviehasactor`
 --
 ALTER TABLE `moviehasactor`
-  MODIFY `idMovieActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de Movie Actor';
+  MODIFY `idMovieActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de Movie Actor', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `moviehaskeyword`
@@ -335,6 +569,12 @@ ALTER TABLE `usercommentmovie`
 --
 ALTER TABLE `usermarkmovie`
   MODIFY `idMark` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla UserMarkMovie';
+
+--
+-- AUTO_INCREMENT de la tabla `userratemovie`
+--
+ALTER TABLE `userratemovie`
+  MODIFY `idRate` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de userRateMovie';
 
 --
 -- Restricciones para tablas volcadas
@@ -367,6 +607,13 @@ ALTER TABLE `usercommentmovie`
 ALTER TABLE `usermarkmovie`
   ADD CONSTRAINT `usermarkmovie_ibfk_1` FOREIGN KEY (`idMovie`) REFERENCES `movie` (`idMovie`),
   ADD CONSTRAINT `usermarkmovie_ibfk_2` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`);
+
+--
+-- Filtros para la tabla `userratemovie`
+--
+ALTER TABLE `userratemovie`
+  ADD CONSTRAINT `userratemovie_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`),
+  ADD CONSTRAINT `userratemovie_ibfk_2` FOREIGN KEY (`idMovie`) REFERENCES `movie` (`idMovie`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
