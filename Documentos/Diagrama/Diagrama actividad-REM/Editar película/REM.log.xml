@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<rem:log xmlns:rem="http://rem.lsi.us.es">
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>CRS-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document created]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>DRS-0002</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document created]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>DFS-0003</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document created]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>CHS-0004</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document created]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #3 (If no usuario válido, the syst...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>ACT-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Creation]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #5 (The system Mostrar ventana de ...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #6 (Actor Administrador Selecciona...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #10 (If datos completos, the system...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>C</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Creation]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #7 (The system Mostrar formulario ...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #9 (Actor Administrador Tocar botó...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #2 (If usuario válido, the system ...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #8 (Actor Administrador Digitra lo...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #1 (Actor Administrador Ingresa al...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #4 (Actor Administrador Selecciona...)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #12 (The system Termina caso de uso)]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>S</rem:type>
+<rem:owner>DRS-0002</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document saved]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>S</rem:type>
+<rem:owner>CHS-0004</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document saved]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>S</rem:type>
+<rem:owner>DFS-0003</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document saved]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>S</rem:type>
+<rem:owner>CRS-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Document saved]]></rem:description>
+</rem:change>
+<rem:change>
+<rem:type>U</rem:type>
+<rem:owner>UC-0001</rem:owner><rem:date>
+<rem:year>2018</rem:year>
+<rem:month>4</rem:month>
+<rem:day>24</rem:day>
+</rem:date>
+<rem:description><![CDATA[Added child #11 (If no datos completos, the sys...)]]></rem:description>
+</rem:change>
+</rem:log>
