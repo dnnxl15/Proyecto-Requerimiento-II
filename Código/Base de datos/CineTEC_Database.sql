@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-04-2018 a las 01:19:35
+-- Tiempo de generación: 29-04-2018 a las 22:49:01
 -- Versión del servidor: 10.1.28-MariaDB
 -- Versión de PHP: 7.1.10
 
@@ -39,7 +39,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getActorById` (IN `pIdMovie` INT(11
 BEGIN
 SELECT actor.idActor AS IdActor, actor.name AS Name
 FROM actor
-INNER JOIN moviehaskeyword ON moviehasactor.idMovie = pIdMovie;
+INNER JOIN moviehasactor ON moviehasactor.idMovie = pIdMovie
+GROUP BY IdActor;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMovie` ()  NO SQL
@@ -57,12 +58,20 @@ SELECT user.idUser, user.avaliability, user.nickname, user.name, user.password, 
 FROM user;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteMovieByUser` (IN `pUsernme` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getComment` (IN `pMovie` VARCHAR(100))  NO SQL
+BEGIN
+SELECT usercommentmovie.idComment AS IdComment, usercommentmovie.dateComment AS DateComment, usercommentmovie.Comment AS CommentMade, getNameByIdMovie(usercommentmovie.idUser) AS UserWho
+FROM usercommentmovie
+WHERE usercommentmovie.idMovie = getIdMovie(pMovie);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteMovieByUser` (IN `pUsername` VARCHAR(100))  NO SQL
     COMMENT 'Procedure that get all the favorites movies by username'
 BEGIN
 SELECT movie.idMovie, movie.gender, movie.director, movie.calification, movie.name, movie.image, movie.year
 FROM movie
-INNER JOIN usermarkmovie ON usermarkmovie.idMovie = movie.idMovie INNER JOIN user ON getIdUser(pUsernme) = usermarkmovie.idUser;
+INNER JOIN usermarkmovie ON usermarkmovie.idMovie = movie.idMovie INNER JOIN user ON getIdUser(pUsername) = usermarkmovie.idUser
+GROUP BY movie.idMovie;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getKeywordById` (IN `pIdMovie` INT(11))  NO SQL
@@ -94,7 +103,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertComment` (IN `pUsername` VARC
     COMMENT 'Procedure that insert a comment in the table userCommentMovie.'
 BEGIN
 INSERT INTO usercommentmovie(usercommentmovie.idComment, usercommentmovie.dateComment, usercommentmovie.Comment, usercommentmovie.idUser, usercommentmovie.idMovie)
-VALUES (NULL, NULL, pComment, getIdUser(pUsername), getIdMovie(pMovie));
+VALUES (NULL, CURRENT_TIMESTAMP, pComment, getIdUser(pUsername), getIdMovie(pMovie));
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFavoriteMovie` (IN `pUsername` VARCHAR(100), IN `pMovie` VARCHAR(100), IN `pFavorite` BOOLEAN)  NO SQL
@@ -153,7 +162,7 @@ DELETE FROM usermarkmovie
 WHERE usermarkmovie.idUser = getIdUser(pUsername) AND usermarkmovie.idMovie = getIdMovie(pMovie);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMovie` ()  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMovie` (IN `pGender` VARCHAR(100), IN `pDirector` VARCHAR(100), IN `pYear` VARCHAR(100), IN `pNewName` VARCHAR(100), IN `pOldName` VARCHAR(100))  NO SQL
     SQL SECURITY INVOKER
     COMMENT 'Procedure that update the movie'
 BEGIN
@@ -206,7 +215,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `getIdAdministrator` (`pUsername` VAR
     COMMENT 'The function returns the id of the administrator, by username.'
 BEGIN
 	DECLARE vUserId INT(11) DEFAULT 0;
-  	SELECT administrator.idAdministrator INTO vUserId FROM user WHERE administrator.nickname = pUsername;
+  	SELECT administrator.idAdministrator INTO vUserId FROM administrator WHERE administrator.nickname = pUsername;
   	RETURN vUserId;
 END$$
 
@@ -234,6 +243,13 @@ BEGIN
   	RETURN vUserId;
 END$$
 
+CREATE DEFINER=`root`@`localhost` FUNCTION `getNameByIdMovie` (`pIdMovie` INT(11)) RETURNS VARCHAR(100) CHARSET latin1 NO SQL
+BEGIN
+	DECLARE vIdMovie VARCHAR(100) DEFAULT "";
+  	SELECT movie.name INTO vIdMovie FROM movie WHERE movie.idMovie = pIdMovie;
+  	RETURN vIdMovie;
+END$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -253,7 +269,8 @@ CREATE TABLE `actor` (
 
 INSERT INTO `actor` (`idActor`, `name`) VALUES
 (3, 'Juan Oscar'),
-(4, 'Pablo García');
+(4, 'Pablo García'),
+(5, 'Daniel Gomez');
 
 -- --------------------------------------------------------
 
@@ -274,7 +291,8 @@ CREATE TABLE `administrator` (
 --
 
 INSERT INTO `administrator` (`idAdministrator`, `password`, `nickname`, `name`, `mail`) VALUES
-(1, '145236', 'Osquitar', 'Oscar', 'oscar@gmail.com');
+(1, '145236', 'Osquitar', 'Oscar', 'oscar@gmail.com'),
+(2, '123654789', 'Pancho', 'Pancho Gomez del toto', 'panchis@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -287,6 +305,13 @@ CREATE TABLE `administratorregistermovie` (
   `idAdministrator` int(11) NOT NULL COMMENT 'Llave foránea de administrator',
   `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de movie'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tabla Administrador registra película';
+
+--
+-- Volcado de datos para la tabla `administratorregistermovie`
+--
+
+INSERT INTO `administratorregistermovie` (`idRegisterMovie`, `idAdministrator`, `idMovie`) VALUES
+(1, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -304,7 +329,8 @@ CREATE TABLE `keyword` (
 --
 
 INSERT INTO `keyword` (`idKeyword`, `name`) VALUES
-(1, 'Miedo');
+(1, 'Miedo'),
+(2, 'Acción');
 
 -- --------------------------------------------------------
 
@@ -327,7 +353,8 @@ CREATE TABLE `movie` (
 --
 
 INSERT INTO `movie` (`idMovie`, `gender`, `director`, `calification`, `name`, `image`, `year`) VALUES
-(1, 'Novela', 'Juan Pancho Gomez', 0, 'La búsqueda de Nemo', NULL, 2014);
+(1, 'Novela', 'Juan Pancho Gomez', 0, 'La búsqueda de Nemo', NULL, 2014),
+(5, 'Miedo', 'Juanes', 0, 'qué pasó?', NULL, 2010);
 
 -- --------------------------------------------------------
 
@@ -347,7 +374,8 @@ CREATE TABLE `moviehasactor` (
 
 INSERT INTO `moviehasactor` (`idMovieActor`, `idMovie`, `idActor`) VALUES
 (2, 1, 3),
-(3, 1, 4);
+(3, 1, 4),
+(4, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -360,6 +388,13 @@ CREATE TABLE `moviehaskeyword` (
   `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de Movie',
   `idKeyword` int(11) NOT NULL COMMENT 'Llave foránea de Keyword'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `moviehaskeyword`
+--
+
+INSERT INTO `moviehaskeyword` (`idMovieKeyword`, `idMovie`, `idKeyword`) VALUES
+(1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -398,6 +433,13 @@ CREATE TABLE `usercommentmovie` (
   `idMovie` int(11) NOT NULL COMMENT 'LLave foránea de la tabla movie'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Comentarios de usuarios en las películas';
 
+--
+-- Volcado de datos para la tabla `usercommentmovie`
+--
+
+INSERT INTO `usercommentmovie` (`idComment`, `dateComment`, `Comment`, `idUser`, `idMovie`) VALUES
+(1, '2018-04-29', 'Muy bonita', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -423,6 +465,13 @@ CREATE TABLE `userratemovie` (
   `idUser` int(11) NOT NULL COMMENT 'Llave foránea de user',
   `idMovie` int(11) NOT NULL COMMENT 'Llave foránea de Movie'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `userratemovie`
+--
+
+INSERT INTO `userratemovie` (`idRate`, `pCalification`, `idUser`, `idMovie`) VALUES
+(1, 3.5, 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -514,43 +563,43 @@ ALTER TABLE `userratemovie`
 -- AUTO_INCREMENT de la tabla `actor`
 --
 ALTER TABLE `actor`
-  MODIFY `idActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Actor', AUTO_INCREMENT=5;
+  MODIFY `idActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Actor', AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `administrator`
 --
 ALTER TABLE `administrator`
-  MODIFY `idAdministrator` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Administrator', AUTO_INCREMENT=2;
+  MODIFY `idAdministrator` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Administrator', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `administratorregistermovie`
 --
 ALTER TABLE `administratorregistermovie`
-  MODIFY `idRegisterMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key in the table';
+  MODIFY `idRegisterMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key in the table', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `keyword`
 --
 ALTER TABLE `keyword`
-  MODIFY `idKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla keyword', AUTO_INCREMENT=2;
+  MODIFY `idKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla keyword', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `movie`
 --
 ALTER TABLE `movie`
-  MODIFY `idMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Movie', AUTO_INCREMENT=2;
+  MODIFY `idMovie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla Movie', AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `moviehasactor`
 --
 ALTER TABLE `moviehasactor`
-  MODIFY `idMovieActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de Movie Actor', AUTO_INCREMENT=4;
+  MODIFY `idMovieActor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de Movie Actor', AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `moviehaskeyword`
 --
 ALTER TABLE `moviehaskeyword`
-  MODIFY `idMovieKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de MovieKeyword';
+  MODIFY `idMovieKeyword` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de MovieKeyword', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
@@ -562,19 +611,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `usercommentmovie`
 --
 ALTER TABLE `usercommentmovie`
-  MODIFY `idComment` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de comentario';
+  MODIFY `idComment` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de comentario', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usermarkmovie`
 --
 ALTER TABLE `usermarkmovie`
-  MODIFY `idMark` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla UserMarkMovie';
+  MODIFY `idMark` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de la tabla UserMarkMovie', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `userratemovie`
 --
 ALTER TABLE `userratemovie`
-  MODIFY `idRate` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de userRateMovie';
+  MODIFY `idRate` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria de userRateMovie', AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
