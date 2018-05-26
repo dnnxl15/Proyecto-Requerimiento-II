@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <EditText
+            android:id="@+id/registerMovie_name"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:hint="Name"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+
+
+        <EditText
+            android:id="@+id/registerMovie_release"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:hint="Release year"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+        <!-- Login Button -->
+
+        <EditText
+            android:id="@+id/registerMovie_gender"
+            android:layout_width="309dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:hint="Gender"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+
+        <EditText
+            android:id="@+id/registerMovie_director"
+            android:layout_width="305dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:hint="Director"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+
+        <Button
+            android:id="@+id/registerMovie_registerButton"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="40dp"
+            android:paddingLeft="0dp"
+            android:text="Register"
+            android:textColor="#fff"
+            tools:background="#aa2eac" />
+    </LinearLayout>
+</LinearLayout>
+
