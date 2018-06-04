@@ -8,18 +8,13 @@
     }
 
     // Parameters
-    $username = $_GET["nickname"];
-    $password = $_GET["password"];
-    $mail = $_GET["mail"];
-    $nameUser = $_GET["name"];
-
-
+    $username = $_GET["username"];
+    $movie = $_GET["movie"];
+    $comment = $_GET["comment"];
 
 	// Call the store procedure
-	$sql= "CALL insertUser($username , $password,  $mail , $nameUser)";
-
-	$call = mysqli_prepare($con ,'CALL insertUser(?,?,?,?)');
-	mysqli_stmt_bind_param($call, 'ssss',$username, $password, $mail, $nameUser);
+	$call = mysqli_prepare($con ,'CALL insertComment(?,?,?)');
+	mysqli_stmt_bind_param($call, 'sss', $username, $movie, $comment);
 	mysqli_stmt_execute($call);
 	//$result = mysqli_query($con ,$sql);
 	

@@ -1,0 +1,48 @@
+- Insertar usuario regular
+* http://localhost/insertRegularUser.php?nickname=Osquitar&password=poijklkl&mail=oscar@gmail.com&name=Oscar%20Cortes
+
+- Insertar administrador
+* http://localhost/insertAdministrator.php?nickname=Osquitar&password=poijklkl&mail=oscar@gmail.com&name=Oscar%20Cortes
+
+- Insertar película
+* http://localhost/insertMovie.php?gender=Novela&director=Oscar%20Gomez&name=Buscando%20a%20Juan&release=2010&admin=Daniel%20Gomez
+
+- Actualizar película
+* http://localhost/editMovie.php?gender=Novela&director=Oscar%20Gomez&oldName=Buscando%20a%20Juan&release=2010&newName=Buscando a Don Juan
+
+- Visualizar película
+* http://localhost/getAllMovie.php
+
+- Bloquear usuario
+* http://localhost/blockUser.php?username=dnnis
+
+- Desbloquear usuario
+* http://localhost/unblockUser.php?username=dnnis
+
+----- Comentar sobre una película
+* http://localhost/commentMovie.php?username=dnnis&movie=Buscando%20a%20Don%20Juan&comment=Muy%20Bonita
+
+- Insertar película favorita
+* http://localhost/insertFavoriteMovie.php?username=dnnis&movie=Buscando%20a%20Don%20Juan&favorite=1
+
+- Ver películas favoritas de un usuario
+* http://localhost/getAllFavoriteMovie.php?name=dnnis
+
+- Buscar películas por nombre
+* http://localhost/getMovieByName.php?name=Buscando a Don Juan
+
+- Buscar películas por actor
+* http://localhost/getMovieByActor.php?name=Daniel Gomez
+
+- Buscar película por director
+* http://localhost/getMovieByDirector.php?name=Juanes
+
+- Buscar películas por género
+* http://localhost/getMovieByGender.php?name=Novela
+
+- Buscar películas por keyword
+* http://localhost/getMovieByKeyword.php?name=Amor
+
+- Buscar películas por year
+* http://localhost/getMovieByYear.php?year=2010
+
