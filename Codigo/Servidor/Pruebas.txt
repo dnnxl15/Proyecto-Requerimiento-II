@@ -19,7 +19,7 @@
 - Desbloquear usuario
 * http://localhost/unblockUser.php?username=dnnis
 
------ Comentar sobre una película
+- Comentar sobre una película
 * http://localhost/commentMovie.php?username=dnnis&movie=Buscando%20a%20Don%20Juan&comment=Muy%20Bonita
 
 - Insertar película favorita
